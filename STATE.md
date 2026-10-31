@@ -24,21 +24,22 @@ a library to read, pass, write".
   exposes for the spots. That is faithful: the game places its sun at run time from the mood and how is not
   established (GBX.NET's day-time convention contradicts TMNF's values), so no core sun is made. The unlit view shows
   the textured geometry; final2 holds the pre-light shaded renders.
-- Program: `trackmania-export --jobs 3 --studio ...` (commit 75b8261, primase pin 3b7fe1c44) reads, lowers (materials,
-  lights, spawns, surfaces), prepares and writes each map; Studio compiles each in ~7 s (cache/trackmania/build3; the
-  written maps are byte-identical to build2's). raise-skate standard calibration: ~90,000 Studio W per 0.6 spot.
-- In game 0.1.0 (run tm2): 12 of 12 shots, 0 crash dumps, markers right. Sheet cache/trackmania/runs/tm2/sheet.jpg.
+- Program: `trackmania-export --jobs 3 --studio ...` (primase pin 3b7fe1c44) reads, lowers (materials, lights,
+  spawns, surfaces), prepares and writes each map; Studio compiles each in ~7-9 s (cache/trackmania/build4).
+- Light calibration (choices.rs LIGHT_LUX_PER_UNIT = 7,700, one unit = skate.'s noon sun): skate.'s Noon exposes at
+  EV 7.0-11.3, 3.7 stops under a physical noon. Run tm3 at 100,000 (physical sun) washed the road and skater white
+  under the gantries (mean luma +30 to +80 over tm2); run tm4 at 7,700: +0 to +23, no clipping, pools under the
+  gantries, the sun's shadows kept (cache/trackmania/runs/tm4/pairs.jpg: tm2 left, tm4 right). Both 12 of 12 shots,
+  0 crash dumps, every travel point read where map.json puts it.
 - Packages 0.2.0 (not published): cache/trackmania/releases/0.2.0/TrackMania_{A01Race,Turbulence,IronMaiden}-0.2.0.zip
-  (35.6, 40.8, 48.0 MB), changelog and page name the lights.
+  (35.6, 40.8, 48.0 MB), payload byte-identical to the build4 stages tm4 ran; changelog and page name the lights.
 
 ## Open
-- In-game check of the lights (job bcccf90e, run tm3, build2 = build3's data): whether 100,000 lux per unit washes the
-  maps out against tm2. If it does, lower `LIGHT_LUX_PER_UNIT` (program/src/choices.rs) with the shots as evidence.
 - The sun from the mood (direction from latitude, rise/fall and day time) needs the game's model: RE of TmForever.exe
   or in-game measurement. Not needed for skate (the program chooses skate's noon sun).
 
 ## Choices (program/src/choices.rs)
-Noon, resident, no LODs, no GI; lights at 100,000 lux per unit, standard calibration; markers snapped to all
+Noon, resident, no LODs, no GI; lights at 7,700 lux per unit (skate.'s sun), standard calibration; markers snapped to all
 collision; start = spawn, checkpoints and finish = travel points (at most 24); textures capped at 1024; blended
 surfaces as 0.5 cutouts; materialless primitives (grass fins, glows, fake shadows) left out.
 
