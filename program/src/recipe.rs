@@ -2,11 +2,12 @@
 //! install's block models), the lowering to core meanings, the preparation for skate., primase's map writer, then
 //! ReSkate Studio. Every choice is a typed value of [`crate::choices`].
 
+use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 use primase_core::convert::{Result, convert};
 use primase_core::pass::{PassManager, PassRegistry, Pipeline};
-use primase_core::{Component, LodChoice, Marker, SelectLod, World};
+use primase_core::{Component, Entity, LodChoice, Marker, Name, SelectLod, World};
 use primase_foundations::compress::oodle::{Oodle, Version};
 use primase_gltf::prepare::FillMissingTexcoords;
 use primase_image::{BakeNormalScale, CapTextures, NormalizeNormals, PackOrm};
@@ -19,6 +20,7 @@ use primase_reskate::passes::{
     PrepareReskateUvTransforms, PrepareReskateWrap, RaiseOptions, RaiseSkate, SnapReskateMarkers,
     SummarizeReskateMap,
 };
+use primase_trackmania::components::TrackmaniaSpawn;
 use primase_trackmania::passes::{
     LowerTrackmaniaLights, LowerTrackmaniaMaterials, LowerTrackmaniaSpawns, LowerTrackmaniaSurfaces,
 };
@@ -53,6 +55,7 @@ pub fn map(
                 others: choices::OTHER_SPAWNS,
             }),
             Box::new(LowerTrackmaniaSurfaces),
+            Box::new(NameWaypoints),
             Box::new(TravelWithinStudio),
         ],
     };
@@ -155,6 +158,41 @@ pub fn map(
         &oodle,
     )?;
     Ok((written, Some(compiled)))
+}
+
+/// Names each spawn marker (the spawn and the travel points) by its block's way point ([`choices::waypoint_name`]):
+/// the names the trainer and the travel list show.
+#[derive(Debug)]
+struct NameWaypoints;
+
+impl primase_core::pass::Pass for NameWaypoints {
+    fn name(&self) -> &'static str {
+        "trackmania-name-waypoints"
+    }
+    fn requires(&self) -> &[&'static str] {
+        &[Marker::NAME, TrackmaniaSpawn::NAME]
+    }
+    fn modifies(&self) -> &[&'static str] {
+        &[Name::NAME]
+    }
+    fn run(&self, w: &mut World, log: &mut primase_core::pass::PassLog) -> std::result::Result<(), String> {
+        let marked: Vec<(Entity, Option<i32>)> = w
+            .iter::<TrackmaniaSpawn>()
+            .filter(|(e, _)| w.get::<Marker>(*e).is_some())
+            .map(|(e, s)| (e, s.waypoint.map(|t| if t == 4 { 0 } else { t })))
+            .collect();
+        let mut nth: BTreeMap<Option<i32>, usize> = BTreeMap::new();
+        for (e, waypoint) in &marked {
+            let of = marked.iter().filter(|(_, t)| t == waypoint).count();
+            let n = nth.entry(*waypoint).or_default();
+            *n += 1;
+            if let Some(name) = choices::waypoint_name(*waypoint, *n, of) {
+                w.insert(*e, Name(name));
+                log.count("markers named by their way point", 1);
+            }
+        }
+        Ok(())
+    }
 }
 
 /// Refuses a map with more travel points than Studio compiles ([`choices::MAX_TRAVEL`]): a map with more checkpoints

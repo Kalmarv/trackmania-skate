@@ -22,6 +22,25 @@ pub const OTHER_SPAWNS: OtherSpawns = OtherSpawns::Travel;
 /// Studio takes at most 25 travel points a compile; the spawn is one.
 pub const MAX_TRAVEL: usize = 24;
 
+/// The spawn's and the travel points' names (the trainer's and the travel list's), by what the block is to a player
+/// rather than its model's name (`StadiumRoadMainCheckpoint spawn`): `Start`, `Checkpoint <n>` and `Finish`, numbered
+/// when the map has more than one. Checkpoints count in the map's block order: a Nations race takes them in any order.
+/// `waypoint` is the block model's `EWayPointType` (0 start, 1 finish, 2 checkpoint, 4 start and finish); `None` keeps
+/// the name as read.
+pub fn waypoint_name(waypoint: Option<i32>, nth: usize, of: usize) -> Option<String> {
+    let role = match waypoint? {
+        0 | 4 => "Start",
+        1 => "Finish",
+        2 => "Checkpoint",
+        _ => return None,
+    };
+    Some(if of > 1 || role == "Checkpoint" {
+        format!("{role} {nth}")
+    } else {
+        role.to_owned()
+    })
+}
+
 /// A car's spawn stands above the road (the car's height); the spawn and the travel points are dropped onto the
 /// collision below, searching from 1 m above where they stand, in every collision: a TrackMania map's ground is its
 /// placed blocks (the ground collision alone, the world's soups, is empty).
@@ -135,5 +154,22 @@ pub fn studio_compile() -> CompileChoices {
         gi: false,
         time_of_day: Some(TimeOfDay::Noon),
         pause_map: None,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::waypoint_name;
+
+    #[test]
+    fn waypoints_are_named_for_the_player() {
+        assert_eq!(waypoint_name(Some(0), 1, 1).as_deref(), Some("Start"));
+        assert_eq!(waypoint_name(Some(4), 1, 1).as_deref(), Some("Start"));
+        assert_eq!(waypoint_name(Some(1), 1, 1).as_deref(), Some("Finish"));
+        assert_eq!(waypoint_name(Some(1), 2, 2).as_deref(), Some("Finish 2"));
+        assert_eq!(waypoint_name(Some(2), 1, 1).as_deref(), Some("Checkpoint 1"));
+        assert_eq!(waypoint_name(Some(2), 3, 5).as_deref(), Some("Checkpoint 3"));
+        assert_eq!(waypoint_name(Some(3), 1, 1), None);
+        assert_eq!(waypoint_name(None, 1, 1), None);
     }
 }

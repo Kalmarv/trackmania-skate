@@ -8,8 +8,11 @@ use std::path::{Path, PathBuf};
 
 use trackmania_export::maps::{Map, Source, display_name};
 
-/// The public repository: the manifest's `website_url` (not created yet: Caleb approves a public repository).
+/// The public repository: the manifest's `website_url`, and where the README's pictures are served from (`media/`).
 pub const REPOSITORY: &str = "https://github.com/Kalmarv/trackmania-skate";
+/// The README's pictures: `<MEDIA>/<map name>.jpg` (a full-screen shot in skate.) and `<map name>_overhead.jpg` (the
+/// pause map's own picture, `ui/map_image.png` of the map folder).
+pub const MEDIA: &str = "https://raw.githubusercontent.com/Kalmarv/trackmania-skate/main/media";
 
 /// The mod's picture: the launcher shows a mod folder's `icon.png`, 256 x 256 (as the other ports ship theirs).
 pub const ICON_SIZE: u32 = 256;
@@ -60,7 +63,7 @@ pub fn mod_folder(
             map.title, map.author
         ),
     });
-    write(&out.join("README.md"), readme(map).as_bytes())?;
+    write(&out.join("README.md"), readme(map, name).as_bytes())?;
     write(&out.join("CHANGELOG.md"), CHANGELOG.as_bytes())?;
     write(
         &out.join("manifest.json"),
@@ -74,6 +77,10 @@ pub fn mod_folder(
 
 /// Every package's CHANGELOG.md (Thunderstore shows it on the package's page).
 pub const CHANGELOG: &str = "# Changelog
+
+## 0.2.1
+- The spawn and the fast-travel points named Start, Checkpoint 1, 2, ... and Finish (they were the blocks' model
+  names).
 
 ## 0.2.0
 - The blocks' own lights: the start, finish and checkpoint gantries' spots and the stadium floodlights light the map.
@@ -92,7 +99,7 @@ fn origin(map: &Map) -> String {
 }
 
 /// The Thunderstore page of a map's package: what it is, where it comes from, what is in it, how to install it.
-pub fn readme(map: &Map) -> String {
+pub fn readme(map: &Map, name: &str) -> String {
     let title = display_name(map);
     format!(
         "# {title}
@@ -101,9 +108,17 @@ pub fn readme(map: &Map) -> String {
 ReSkate. Rebuilt block by block from the game's own models, materials and collision. An unofficial fan port: \
 TrackMania Nations Forever is by Nadeo and Ubisoft; the map is {author}'s.
 
+![{title} in skate.]({MEDIA}/{file}.jpg)
+
+## Overhead map
+The map from above: the picture the pause map shows.
+
+![{title} from above]({MEDIA}/{file}_overhead.jpg)
+
 ## In the map
 - Every block of the map with the game's own collision: roads, platforms, loops and ramps to skate.
-- The start as the spawn, every checkpoint and the finish as fast-travel points.
+- The start as the spawn and every checkpoint and the finish as fast-travel points, by name: Start, Checkpoint 1,
+  2, ... and Finish.
 - Lit by skate.'s sun and sky and by the blocks' own spots and floodlights. The grass's blade fins, the glows and
   the fake shadows under objects are left out, and water is a still surface.
 
@@ -112,11 +127,12 @@ TrackMania Nations Forever is by Nadeo and Ubisoft; the map is {author}'s.
 2. Install this package from the ReSkate launcher's **MODS** page (Thunderstore), or drag the zip onto the launcher.
 3. Pick **{title}** from the level list.
 
-Converted with [primase](https://github.com/kalmarv/primase).
+Converted with [primase](https://github.com/kalmarv/primase); the conversion is open: {REPOSITORY}
 ",
         name = map.title,
         author = map.author,
         origin = origin(map),
+        file = name,
     )
 }
 
@@ -270,16 +286,34 @@ mod tests {
     /// The page credits the map's author and links an exchange map's page.
     #[test]
     fn the_page_credits_the_map() {
-        let a01 = readme(&MAPS[0]);
+        let a01 = readme(&MAPS[0], "TrackMania_A01Race");
         assert!(
             a01.contains("**A01-Race** by **Nadeo**") && a01.contains("Nations campaign"),
             "{a01}"
         );
-        let turbulence = readme(&MAPS[1]);
+        let turbulence = readme(&MAPS[1], "TrackMania_Turbulence");
         assert!(turbulence.contains("by **matto**"), "{turbulence}");
         assert!(
             turbulence.contains("https://tmnf.exchange/trackshow/1354053"),
             "{turbulence}"
+        );
+    }
+
+    /// The page shows the map in skate. and its pause map from the repository's media/, and links the repository.
+    #[test]
+    fn the_page_shows_the_pictures() {
+        let page = readme(&MAPS[1], "TrackMania_Turbulence");
+        assert!(
+            page.contains(&format!("({MEDIA}/TrackMania_Turbulence.jpg)")),
+            "{page}"
+        );
+        assert!(
+            page.contains(&format!("({MEDIA}/TrackMania_Turbulence_overhead.jpg)")),
+            "{page}"
+        );
+        assert!(
+            page.contains(&format!("the conversion is open: {REPOSITORY}")),
+            "{page}"
         );
     }
 }

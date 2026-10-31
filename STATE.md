@@ -44,8 +44,15 @@ a library to read, pass, write".
   roads (A taps with the stick up: 89 / 30 / 86 m; readings at 2.5 to 10 km/h; where_3, where_14 show the skater on
   the board on the road), heights staying on the road. 15 of 15 shots, 0 crash dumps. Keyboard input does not move
   the skater (W through kit/gs-drive, run move3). Grinding is not tested (it needs a line onto a rail).
-- Packages 0.2.0 (not published): cache/trackmania/releases/0.2.0/TrackMania_{A01Race,Turbulence,IronMaiden}-0.2.0.zip
-  (35.6, 40.8, 48.0 MB), payload byte-identical to the build4 stages tm4 ran; changelog and page name the lights.
+- Packages 0.2.1 (not published): cache/trackmania/releases/0.2.1/TrackMania_{A01Race,Turbulence,IronMaiden}-0.2.1.zip
+  (35.6, 40.8, 48.0 MB), built from build6, laid out as SkateBIRD's (manifest, icon, README, CHANGELOG, trainer.json,
+  reskate-levels.json beside Studio's Patch). 0.2.1 names the spawn and travel points Start, Checkpoint n, Finish
+  (program pass trackmania-name-waypoints; the travel list's stop names too) and gives each page SkateBIRD's form: a
+  shot in skate., the pause map's picture, the open-repo link (pictures in media/). Run media1 (scratch/trackmania/pad/
+  run_media.sh) loaded all 3 from the packaged mod folders: spawns read where map.json puts them, 0 crash dumps; each
+  zip's payload is byte-identical to the folders it loaded. Pad Back and Start open skate.'s menus, but the shot
+  (ffmpeg gfxcapture) holds only the menu backdrop, no UI, so media/'s overhead pictures are ui/map_image.png, the
+  pause map's own picture. 0.2.0 (cache/trackmania/releases/0.2.0) is superseded.
 
 ## Open
 - The sun from the mood (direction from latitude, rise/fall and day time) needs the game's model: RE of TmForever.exe
