@@ -1,0 +1,5 @@
+# The TrackMania Nations Forever conversion (program/: the recipe) and its tooling (tools/trackmania-tools: packaging
+# and the skate. run commands), one workspace so primase is built once.
+[workspace]
+members = ["program", "tools/trackmania-tools"]
+resolver = "3"

@@ -1,0 +1,5 @@
+# Cargo output, release zips and the exchange maps (each its author's; download them, see README) never go in the repo.
+target/
+*.zip
+maps/
+.cargo/

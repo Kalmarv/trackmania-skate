@@ -1,0 +1,26 @@
+[package]
+name = "trackmania-export"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99"
+publish = false
+
+# primase is a library this program uses, pinned by git revision (no path checkout, no fork): main 1f0952904, with the
+# trackmania crate from primase's `trackmania` branch on top of it. Until that branch is pushed (Caleb approves pushes)
+# the local .cargo/config.toml patches these onto the worktree; then they become one public revision.
+[dependencies]
+primase-core = { git = "https://github.com/kalmarv/primase.git", rev = "1f0952904" }
+primase-trackmania = { git = "https://github.com/kalmarv/primase.git", rev = "1f0952904" }
+primase-reskate = { git = "https://github.com/kalmarv/primase.git", rev = "1f0952904" }
+primase-meshops = { git = "https://github.com/kalmarv/primase.git", rev = "1f0952904" }
+primase-image = { git = "https://github.com/kalmarv/primase.git", rev = "1f0952904" }
+primase-gltf = { git = "https://github.com/kalmarv/primase.git", rev = "1f0952904" }
+primase-foundations = { git = "https://github.com/Kalmarv/primase-foundations", rev = "f9cf4ece1de77fce9d703c63347dd70b728b7c0e", features = ["compress"] }
+serde_json = "1"
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "trackmania-export"
+path = "src/main.rs"
