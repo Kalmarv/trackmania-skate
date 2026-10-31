@@ -52,8 +52,12 @@ Noon, resident, no LODs, no GI; lights at 7,700 lux per unit (skate.'s sun), sta
 collision; start = spawn, checkpoints and finish = travel points (at most 24); textures capped at 1024; blended
 surfaces as 0.5 cutouts; materialless primitives (grass fins, glows, fake shadows) left out.
 
-## Waiting on Caleb (nothing pushed)
-- Push gbx-formats b1c154c; primase-foundations zlib-stream d64ea51; primase-testdata eb199df; primase branch
-  trackmania (3b7fe1c44); the lab branch (2b19648). Then the program pins one public rev and .cargo/config.toml goes.
-- Create github.com/Kalmarv/trackmania-skate (manifest website_url) and push this repo.
-- Publishing the three packages on Thunderstore; grinding on the blocks' edges and rails by hand.
+## Waiting
+- Landing (Caleb approved pushing, through the primase lead): primase branch trackmania rebased onto origin/main
+  0296a0a27 (head 643fdce4d; fmt, clippy, tests with GAME_DATA all pass), sent to primase-landing with its three dep
+  pins, each a fast-forward of its origin/main: gbx-formats b1c154c, primase-foundations d64ea51, primase-testdata
+  eb199df. Then: rebase the lab branch (2 commits) onto master and repin it, repin program/Cargo.toml to the landed
+  rev, drop .cargo/config.toml, rebuild and push here.
+- This repo is public at github.com/Kalmarv/trackmania-skate (Caleb: repo yes, Thunderstore not yet). Until the
+  landing, its primase pin (3b7fe1c44) is not on GitHub, so it builds only with the local patch.
+- Thunderstore: the three 0.2.0 packages, when Caleb says. Grinding on the blocks by hand.
