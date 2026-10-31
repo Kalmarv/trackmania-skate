@@ -6,9 +6,9 @@ trackmania maps following the general style of the other reskate maps like skate
 a library to read, pass, write".
 
 ## What works (verified)
-- Reader: gbx-formats (crates/gbx-formats, worktree .orca/worktrees/gbx-reader, b1c154c) reads Gbx maps and the
-  NadeoPak packs. primase-trackmania (primase worktree .worktrees/trackmania, branch trackmania, local commits on main
-  1f0952904, head 3b7fe1c44) places every block from the Stadium pack and reads every part of every solid: visuals,
+- Reader, all on GitHub mains: gbx-formats 68dffb8 (reads Gbx maps and the NadeoPak packs; pins primase-foundations
+  d64ea51 for the packs' Inflater) and primase-trackmania on primase main d827770db (landed through land.sh: fmt,
+  clippy, 1502 unit tests, real-data primase-trackmania 8/8, primase-reskate 403/403, primase-meshops 165/165). It places every block from the Stadium pack and reads every part of every solid: visuals,
   collision and lights (CPlugTreeLight -> CPlugLight -> GxLight, kept as `trackmania.lights`), every material image
   (DDS, and TGA through primase-image's new `read_tga`; only the two DefaultCubeReflect cube maps stay unread, core has
   no cube texture), and the decoration's mood (`trackmania.mood`: sun latitude/rise/fall, remapped start day time,
@@ -17,15 +17,19 @@ a library to read, pass, write".
 - `lower-trackmania-lights{lux-per-unit}`: each spot/ball a core.light per instance; a spot shines along its tree's +Z
   (StadiumWarpSpotsGlow quads face +Z 82/82); candela = intensity / a2 x lux-per-unit (TM falloff 1/(1 + a2 d^2)),
   range = ball radius; colour sRGB -> linear. Frustum/directional counted and left out (none in the three maps).
-- Lab (primase-lab worktree .worktrees/lab-trackmania, source kind `trackmania`, commit 2b19648, primase 3b7fe1c44):
+- Lab (primase-lab master 3104571, source kind `trackmania`, primase d827770db; landed: clippy, 875 unit tests):
   `check --views shaded,unlit,lights,notices,collision` on A01-Race, Turbulence (TMX 1354053), Iron Maiden (TMX
-  136547): ok, 0 magenta/lime/cyan, nothing unsupported, lights 156 / 417 / 92. Output scratch/trackmania/lab/final3.
+  136547): ok, 0 magenta/lime/cyan, nothing unsupported, lights 156 / 417 / 92. Output scratch/trackmania/lab/final3; final6 (the landed
+  branch, no local patch) has the same 15 images byte for byte.
   The shaded view is dark by the lab's rule: the world states lights and no sun, so the lab drops its key light and
   exposes for the spots. That is faithful: the game places its sun at run time from the mood and how is not
   established (GBX.NET's day-time convention contradicts TMNF's values), so no core sun is made. The unlit view shows
   the textured geometry; final2 holds the pre-light shaded renders.
-- Program: `trackmania-export --jobs 3 --studio ...` (primase pin 3b7fe1c44) reads, lowers (materials, lights,
-  spawns, surfaces), prepares and writes each map; Studio compiles each in ~7-9 s (cache/trackmania/build4).
+- Program (github.com/Kalmarv/trackmania-skate): `trackmania-export --jobs 3 --studio ...` (primase d827770db,
+  foundations f9cf4ec, the revision primase shares) reads, lowers (materials, lights, spawns, surfaces), prepares and
+  writes each map; Studio compiles each in ~20 s (cache/trackmania/build5). build5's map folders (223/292/302 files)
+  are byte-identical to build4's, which the game runs used. Studio's compiled cas/toc differ, but Studio differs from
+  itself on identical input (a01 compiled twice: build5, build5b). A fresh clone builds with `--locked`, no patch.
 - Light calibration (choices.rs LIGHT_LUX_PER_UNIT = 7,700, one unit = skate.'s noon sun): skate.'s Noon exposes at
   EV 7.0-11.3, 3.7 stops under a physical noon. Run tm3 at 100,000 (physical sun) washed the road and skater white
   under the gantries (mean luma +30 to +80 over tm2); run tm4 at 7,700: +0 to +23, no clipping, pools under the
@@ -52,21 +56,8 @@ Noon, resident, no LODs, no GI; lights at 7,700 lux per unit (skate.'s sun), sta
 collision; start = spawn, checkpoints and finish = travel points (at most 24); textures capped at 1024; blended
 surfaces as 0.5 cutouts; materialless primitives (grass fins, glows, fake shadows) left out.
 
-## Waiting (resume point)
-- Landing in progress (Caleb approved pushing through the primase lead): gbx-formats b1c154c, primase-foundations
-  d64ea51 and primase-testdata eb199df are on their GitHub mains. The lead (primase-landing) is landing primase branch
-  trackmania (worktree .worktrees/trackmania, head 643fdce4d rebased on main 0296a0a27; fmt, clippy -D warnings, tests
-  with GAME_DATA all pass) with land.sh, job 07605d65; land.sh rebases, so the landed sha may differ from 643fdce4d. The
-  lead sends the landed rev; `git ls-remote https://github.com/Kalmarv/primase refs/heads/main` shows it too.
-- Then:
-  1. Lab (worktree .worktrees/lab-trackmania, branch trackmania, rebased onto origin/master 3de4ddd: e9dcec0, 9cf598f,
-     backup branch backup/lab-trackmania-pre-rebase): set all 21 `Kalmarv/primase", rev =` lines to the landed rev, move
-     .cargo/config.toml aside, `cargo build --release` (regenerates Cargo.lock from GitHub), rerun
-     scratch/trackmania/lab/run_final4.sh (final3's cameras, radians to degrees) and compare with final4 (all three ok,
-     0 sentinels, nothing unsupported, lights 156/417/92, left_out 0/57/0), commit "pin primase at <rev>", push the
-     branch to origin and ask the lead to land it on master.
-  2. Program: program/Cargo.toml primase rev -> landed rev, drop .cargo/config.toml, cargo build --release, rebuild
-     one map to confirm, update this file, push to github.com/Kalmarv/trackmania-skate (public, created; main 45c8530+).
-  3. Clean-clone check: clone trackmania-skate to scratch and `cargo build --release` with no local patch.
-- Thunderstore: the three 0.2.0 packages wait for Caleb (he said repo only). Grinding is by hand (no grind curves, as
-  Los Santos: skate grinds the collision's own edges).
+## Remaining
+- Thunderstore: the three 0.2.0 packages (cache/trackmania/releases/0.2.0) wait for Caleb (he said repo only).
+- Grinding is by hand (no grind curves, as Los Santos: skate grinds the collision's own edges).
+- Local patch configs are moved aside as .cargo/config.toml.local-off (here, the lab worktree, .worktrees/trackmania,
+  crates/gbx-formats and its gbx-reader worktree); land.sh refuses a landing while one is in effect.
