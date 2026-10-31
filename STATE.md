@@ -63,6 +63,18 @@ Noon, resident, no LODs, no GI; lights at 7,700 lux per unit (skate.'s sun), sta
 collision; start = spawn, checkpoints and finish = travel points (at most 24); textures capped at 1024; blended
 surfaces as 0.5 cutouts; materialless primitives (grass fins, glows, fake shadows) left out.
 
+## Style against SkateBIRD 0.3.1 and Los Santos 0.3.0 (checked in their recipes and packages)
+- Pipeline: primase reader -> lowering passes -> ReSkate prepare passes -> MapSink -> Studio, as both (SkateBIRD
+  program/src/recipe.rs, Los Santos src/settings.rs).
+- Studio compile: resident, no LODs, no baked GI, noon: SkateBIRD choices.rs studio_compile, the same values here.
+- Pause map: PrepareReskatePauseMap from the geometry, as both.
+- Grinds: no grind curves, skate. grinds the collision itself, as Los Santos (SkateBIRD adds curves only for its
+  ropes and cables, which have no collision; TrackMania's blocks all carry the game's own).
+- Package: one level per zip `<Game>_<Level>-<version>.zip`, manifest/icon/README/CHANGELOG/trainer.json/
+  reskate-levels.json beside Studio's Patch, display name `<Game> | <Level>`, page with a shot in skate., an overhead
+  section, the install steps and the open-repo link, pictures in the repo's media/: as SkateBIRD 0.3.1 (file lists
+  compared entry by entry).
+
 ## Remaining (Caleb, 2026-10-31)
 - Thunderstore: "Keep repo only": the 0.2.1 zips stay in cache/trackmania/releases/0.2.1 for Caleb to upload.
 - Grinding: Caleb tests by hand (no grind curves, as Los Santos: skate. grinds the collision's own edges).
