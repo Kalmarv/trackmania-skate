@@ -1,9 +1,10 @@
 //! The views an in-game check shoots of a built map: its spawn, and up to [`TRAVEL_VIEWS`] of its travel points spread
 //! over their list (first, middle, last), from the map's own `map.json` as the program wrote it.
 //!
-//! The map's frame is +Y up and -Z forward (`map.json` says so), and skate.'s `trainer tp` takes the scene's (x, y,
-//! -z): a position `[x, y, z]` is `trainer tp x y -z`. skate gives no console way to turn the skater: the spawn view is
-//! shot where the level starts (facing the spawn's yaw), and `trainer tp` leaves the skater at heading 0.
+//! skate.'s `trainer tp` and `trainer where` take and print positions in the map's own frame (+Y up, -Z forward, metres,
+//! as `map.json` states it): a position `[x, y, z]` is `trainer tp x y z` (A01's spawn [171.2, 90.3, 688.0] reads back as
+//! (171.20, 90.95, 688.00) standing on it). skate gives no console way to turn the skater: the spawn view is shot where
+//! the level starts (facing the spawn's yaw), and `trainer tp` leaves the skater at heading 0.
 use serde_json::Value;
 
 /// Metres above a travel point a teleport lands (skate drops the skater onto the ground).
@@ -57,7 +58,7 @@ pub fn skate_commands(map: &Value, name: &str) -> Result<String, String> {
         format!("wait {HOLD}"),
     ];
     for [x, y, z] in travel_views(map)? {
-        c.push(format!("trainer tp {x} {:.3} {}", y + LIFT, -z));
+        c.push(format!("trainer tp {x} {:.3} {z}", y + LIFT));
         c.extend(["wait 12".into(), "trainer where".into(), format!("wait {HOLD}")]);
     }
     Ok(c.join(";"))
@@ -81,7 +82,7 @@ mod tests {
         assert!(c.contains(
             "load levels/game/dingolevel_reskate_trackmania_a01race/dingolevel_reskate_trackmania_a01race"
         ));
-        assert!(c.contains("trainer tp 7 8.300 -9"), "{c}");
+        assert!(c.contains("trainer tp 7 8.300 9;"), "{c}");
         assert_eq!(c.matches("trainer where").count(), 4);
         let one = serde_json::json!({ "travel_points": [{ "position": [1.0, 2.0, 3.0] }] });
         assert_eq!(travel_views(&one).unwrap().len(), 1);
