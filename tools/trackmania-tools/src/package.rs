@@ -75,6 +75,9 @@ pub fn mod_folder(
 /// Every package's CHANGELOG.md (Thunderstore shows it on the package's page).
 pub const CHANGELOG: &str = "# Changelog
 
+## 0.2.0
+- The blocks' own lights: the start, finish and checkpoint gantries' spots and the stadium floodlights light the map.
+
 ## 0.1.0
 - First release: the map rebuilt block by block from TrackMania Nations Forever's own models, with their collision,
   the start as the spawn and every checkpoint and the finish as fast-travel points.
@@ -101,8 +104,8 @@ TrackMania Nations Forever is by Nadeo and Ubisoft; the map is {author}'s.
 ## In the map
 - Every block of the map with the game's own collision: roads, platforms, loops and ramps to skate.
 - The start as the spawn, every checkpoint and the finish as fast-travel points.
-- Lit by skate.'s sun and sky. The grass's blade fins, the glows and the fake shadows under objects are left out, and
-  water is a still surface.
+- Lit by skate.'s sun and sky and by the blocks' own spots and floodlights. The grass's blade fins, the glows and
+  the fake shadows under objects are left out, and water is a still surface.
 
 ## Install
 1. Install skate. and ReSkate.
