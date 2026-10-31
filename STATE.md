@@ -34,9 +34,12 @@ a library to read, pass, write".
 - Collision under the skater's physics (run drop1, tools/ingame_drop.sh, build4): dropped from 20 m above each map's 3
   travel points, the skater is at rest after 15 s on 9 of 9 drops, none through: 3 on the road (+0.59 to +0.61 m, the
   standing height the spawns read too), 6 on the roof of the checkpoint/finish arch above the point (+6.9 to +8.1 m;
-  where_3, where_12 show the skater standing on its flags). 12 of 12 shots, 0 crash dumps. Moving the skater by
-  keyboard is not established: W held through kit/gs-drive (run move3; kit 39b8ced fixed gs_drive, whose 800 ms settle
-  `um win drive` rejected) leaves the skater where it stood on 3 of 3 maps.
+  where_3, where_12 show the skater standing on its flags). 12 of 12 shots, 0 crash dumps.
+- Skating on the maps (run roll1, scratch/trackmania/pad/run_roll.sh: a virtual Xbox 360 pad through ViGEmBus, plugged
+  for the run): on all 3 maps the skater walks (left stick 4 s: 18 m each), gets on the board (trial 2: Y, then X taps) and rolls on the
+  roads (A taps with the stick up: 89 / 30 / 86 m; readings at 2.5 to 10 km/h; where_3, where_14 show the skater on
+  the board on the road), heights staying on the road. 15 of 15 shots, 0 crash dumps. Keyboard input does not move
+  the skater (W through kit/gs-drive, run move3). Grinding is not tested (it needs a line onto a rail).
 - Packages 0.2.0 (not published): cache/trackmania/releases/0.2.0/TrackMania_{A01Race,Turbulence,IronMaiden}-0.2.0.zip
   (35.6, 40.8, 48.0 MB), payload byte-identical to the build4 stages tm4 ran; changelog and page name the lights.
 
@@ -53,5 +56,4 @@ surfaces as 0.5 cutouts; materialless primitives (grass fins, glows, fake shadow
 - Push gbx-formats b1c154c; primase-foundations zlib-stream d64ea51; primase-testdata eb199df; primase branch
   trackmania (3b7fe1c44); the lab branch (2b19648). Then the program pins one public rev and .cargo/config.toml goes.
 - Create github.com/Kalmarv/trackmania-skate (manifest website_url) and push this repo.
-- Publishing the three packages on Thunderstore; playing the maps by hand (rolling and grinding on the blocks: synthetic
-  keys do not move the skater, so only a player can check them).
+- Publishing the three packages on Thunderstore; grinding on the blocks' edges and rails by hand.
