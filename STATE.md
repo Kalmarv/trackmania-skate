@@ -6,42 +6,44 @@ trackmania maps following the general style of the other reskate maps like skate
 a library to read, pass, write".
 
 ## What works (verified)
-- Reader: gbx-formats (crates/gbx-formats, branch gbx-reader worktree) reads Gbx maps and the NadeoPak packs;
-  b1c154c adds collector descs and pack-file heads (every pack: 2360 heads, 313 descs, 312 bodies name the same ident).
-  primase-trackmania (primase worktree .worktrees/trackmania, branch trackmania, local commits 06651deff..3e37e6c73 on
-  main 1f0952904) places every block from the Stadium pack.
-- Lab (primase-lab worktree .worktrees/lab-trackmania, source kind `trackmania`, local commit ad9c601, primase pinned at 3e37e6c73):
-  `check --views shaded,notices,collision` on A01-Race, Turbulence (TMX 1354053) and Iron Maiden (TMX 136547): ok,
-  0 magenta/lime/cyan pixels, every draw faithful (3227, 2779, 3556). Reports and PNGs in
-  scratch/trackmania/lab/final/<map>. Unread: CPlugTreeLight visuals (92-258 per map), 4-6 non-DDS/cube images.
-- Program: `trackmania-export --jobs 3 --studio ...` reads, lowers, prepares and writes each map in 3-4 s and Studio
-  compiles it in ~8 s (build cache/trackmania/build1). Studio warnings are the usual (render objects merged, collision
-  edges joined, BAM Lighting_Global, layout superbundle without install chunk; Iron Maiden also a light-probe overlap).
-- In game (run tm2, job 34fe93c2, `kit/run game`, ingame.sh copy mode, the packaged mod folders, all three in one
-  launch): 12 of 12 shots, 0 crash dumps, profile restored exactly. Each map: spawn plus three travel points (first,
-  middle, last); every `trainer where` reads its point 0.6-0.65 m up, standing (A01 spawn (171.20, 90.95, 688.00) for
-  map.json [171.2, 90.3, 688.0]). Contact sheet cache/trackmania/runs/tm2/sheet.jpg: start arches, checkpoints,
-  finishes, ramps, textured and lit. `trainer tp`/`where` use map.json's frame unchanged (tm1 negated z and fell).
-- Packages 0.1.0 (not published): cache/trackmania/releases/0.1.0/TrackMania_{A01Race,Turbulence,IronMaiden}-0.1.0.zip
-  (35.6, 40.8, 47.9 MB), SkateBIRD's layout, icon.png from tm2 shots 4, 8, 11 (cache/trackmania/icons).
+- Reader: gbx-formats (crates/gbx-formats, worktree .orca/worktrees/gbx-reader, b1c154c) reads Gbx maps and the
+  NadeoPak packs. primase-trackmania (primase worktree .worktrees/trackmania, branch trackmania, local commits on main
+  1f0952904, head 3b7fe1c44) places every block from the Stadium pack and reads every part of every solid: visuals,
+  collision and lights (CPlugTreeLight -> CPlugLight -> GxLight, kept as `trackmania.lights`), every material image
+  (DDS, and TGA through primase-image's new `read_tga`; only the two DefaultCubeReflect cube maps stay unread, core has
+  no cube texture), and the decoration's mood (`trackmania.mood`: sun latitude/rise/fall, remapped start day time,
+  shadows, light map mood, the Sunrise/Sunset folders' Directional.SceneLight). Real-data test (GAME_DATA set): all 65
+  campaign maps wholly placed, no part skipped, every mood read (7 Day, 16 Night, 22 Sunrise, 20 Sunset).
+- `lower-trackmania-lights{lux-per-unit}`: each spot/ball a core.light per instance; a spot shines along its tree's +Z
+  (StadiumWarpSpotsGlow quads face +Z 82/82); candela = intensity / a2 x lux-per-unit (TM falloff 1/(1 + a2 d^2)),
+  range = ball radius; colour sRGB -> linear. Frustum/directional counted and left out (none in the three maps).
+- Lab (primase-lab worktree .worktrees/lab-trackmania, source kind `trackmania`, commit 2b19648, primase 3b7fe1c44):
+  `check --views shaded,unlit,lights,notices,collision` on A01-Race, Turbulence (TMX 1354053), Iron Maiden (TMX
+  136547): ok, 0 magenta/lime/cyan, nothing unsupported, lights 156 / 417 / 92. Output scratch/trackmania/lab/final3.
+  The shaded view is dark by the lab's rule: the world states lights and no sun, so the lab drops its key light and
+  exposes for the spots. That is faithful: the game places its sun at run time from the mood and how is not
+  established (GBX.NET's day-time convention contradicts TMNF's values), so no core sun is made. The unlit view shows
+  the textured geometry; final2 holds the pre-light shaded renders.
+- Program: `trackmania-export --jobs 3 --studio ...` (commit 75b8261, primase pin 3b7fe1c44) reads, lowers (materials,
+  lights, spawns, surfaces), prepares and writes each map; Studio compiles each in ~7 s (cache/trackmania/build3; the
+  written maps are byte-identical to build2's). raise-skate standard calibration: ~90,000 Studio W per 0.6 spot.
+- In game 0.1.0 (run tm2): 12 of 12 shots, 0 crash dumps, markers right. Sheet cache/trackmania/runs/tm2/sheet.jpg.
+- Packages 0.2.0 (not published): cache/trackmania/releases/0.2.0/TrackMania_{A01Race,Turbulence,IronMaiden}-0.2.0.zip
+  (35.6, 40.8, 48.0 MB), changelog and page name the lights.
+
+## Open
+- In-game check of the lights (job bcccf90e, run tm3, build2 = build3's data): whether 100,000 lux per unit washes the
+  maps out against tm2. If it does, lower `LIGHT_LUX_PER_UNIT` (program/src/choices.rs) with the shots as evidence.
+- The sun from the mood (direction from latitude, rise/fall and day time) needs the game's model: RE of TmForever.exe
+  or in-game measurement. Not needed for skate (the program chooses skate's noon sun).
 
 ## Choices (program/src/choices.rs)
-Noon, resident, no LODs, no GI; standard light calibration; markers snapped to all collision (TM blocks are instanced
-prototypes, not static ground); start = spawn, checkpoints and finish = travel points (at most 24); textures capped at
-1024; blended surfaces as 0.5 cutouts; materialless primitives (grass fins, glows, fake shadows) left out.
-
-## primase additions (trackmania branch, local)
-- meshops `first-texcoord-set`: TM's projected grass/soil sample set 3, skate samples set 0.
-- reskate `ground-reskate-markers{from=all}`.
-- reskate `prepare-reskate-uv-transforms` leaves materials nothing draws.
-- worlds/trackmania: reader, lower-trackmania-{materials,spawns,surfaces}.
+Noon, resident, no LODs, no GI; lights at 100,000 lux per unit, standard calibration; markers snapped to all
+collision; start = spawn, checkpoints and finish = travel points (at most 24); textures capped at 1024; blended
+surfaces as 0.5 cutouts; materialless primitives (grass fins, glows, fake shadows) left out.
 
 ## Waiting on Caleb (nothing pushed)
-- Push gbx-formats; primase-foundations zlib-stream d64ea51; primase-testdata eb199df (then move the pin); primase
-  branch trackmania (then the program's Cargo.toml pins one public rev and .cargo/config.toml goes); the lab source.
+- Push gbx-formats b1c154c; primase-foundations zlib-stream d64ea51; primase-testdata eb199df; primase branch
+  trackmania (3b7fe1c44); the lab branch (2b19648). Then the program pins one public rev and .cargo/config.toml goes.
 - Create github.com/Kalmarv/trackmania-skate (manifest website_url) and push this repo.
-- Publishing the three packages on Thunderstore.
-
-## Next
-- Caleb: approve the pushes above, then pin primase by its public rev and drop .cargo/config.toml; play the maps
-  (rolling, grinding and fast travel are untested by hand).
+- Publishing the three packages on Thunderstore; playing the maps by hand (rolling, grinding, fast travel untested).
