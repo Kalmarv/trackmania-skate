@@ -19,7 +19,9 @@ use primase_reskate::passes::{
     PrepareReskateUvTransforms, PrepareReskateWrap, RaiseOptions, RaiseSkate, SnapReskateMarkers,
     SummarizeReskateMap,
 };
-use primase_trackmania::passes::{LowerTrackmaniaMaterials, LowerTrackmaniaSpawns, LowerTrackmaniaSurfaces};
+use primase_trackmania::passes::{
+    LowerTrackmaniaLights, LowerTrackmaniaMaterials, LowerTrackmaniaSpawns, LowerTrackmaniaSurfaces,
+};
 use primase_trackmania::read::GameFiles;
 use primase_trackmania::{FRAME, TrackmaniaReader};
 
@@ -44,6 +46,9 @@ pub fn map(
     let select = Pipeline {
         passes: vec![
             Box::new(LowerTrackmaniaMaterials),
+            Box::new(LowerTrackmaniaLights {
+                lux_per_unit: choices::LIGHT_LUX_PER_UNIT,
+            }),
             Box::new(LowerTrackmaniaSpawns {
                 others: choices::OTHER_SPAWNS,
             }),

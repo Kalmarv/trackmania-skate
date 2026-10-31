@@ -31,7 +31,13 @@ pub fn grounded() -> BTreeSet<MarkerKind> {
 pub const GROUND_ABOVE: f64 = 1.0;
 pub const GROUND_FROM: GroundFrom = GroundFrom::All;
 
-/// TrackMania's maps state no lights of their own (the game lights them from the mood's sun and sky).
+/// The blocks' lights (the start, finish and checkpoint gantries' spots, the stadium floodlights): one unit of the
+/// game's light intensity is the noon sun's 100,000 lux. The game lights a surface by its lights and its sun on one
+/// scale (unit intensity at a light's base, the sun's colour times its angle), and its moods store no sun intensity
+/// to scale by, so a unit is taken as the sun's: a spot of 0.6 is 7.6 million candela.
+pub const LIGHT_LUX_PER_UNIT: f32 = 100_000.0;
+
+/// raise-skate's light calibration: the lights are physical candela by [`LIGHT_LUX_PER_UNIT`], as GTA's are.
 pub const LIGHTS: LightCalibration = LightCalibration::Standard;
 
 /// A physics surface the reader's classes leave without one (`NotCollidable`: the tribunes, trees, banners and other

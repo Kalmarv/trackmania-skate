@@ -5,16 +5,16 @@ edition = "2024"
 rust-version = "1.99"
 publish = false
 
-# primase is a library this program uses, pinned by git revision (no path checkout, no fork): 3e37e6c73, primase's
+# primase is a library this program uses, pinned by git revision (no path checkout, no fork): 3b7fe1c44, primase's
 # `trackmania` branch on main 1f0952904. Until that branch (and foundations d64ea51, gbx-formats b1c154c) is pushed
 # (Caleb approves pushes) the local .cargo/config.toml patches these onto the local checkouts.
 [dependencies]
-primase-core = { git = "https://github.com/kalmarv/primase.git", rev = "3e37e6c73b44ecfa5cce31b63d457a8f9be107d1" }
-primase-trackmania = { git = "https://github.com/kalmarv/primase.git", rev = "3e37e6c73b44ecfa5cce31b63d457a8f9be107d1" }
-primase-reskate = { git = "https://github.com/kalmarv/primase.git", rev = "3e37e6c73b44ecfa5cce31b63d457a8f9be107d1" }
-primase-meshops = { git = "https://github.com/kalmarv/primase.git", rev = "3e37e6c73b44ecfa5cce31b63d457a8f9be107d1" }
-primase-image = { git = "https://github.com/kalmarv/primase.git", rev = "3e37e6c73b44ecfa5cce31b63d457a8f9be107d1" }
-primase-gltf = { git = "https://github.com/kalmarv/primase.git", rev = "3e37e6c73b44ecfa5cce31b63d457a8f9be107d1" }
+primase-core = { git = "https://github.com/kalmarv/primase.git", rev = "3b7fe1c444b320da09976019027c535bc379a1ba" }
+primase-trackmania = { git = "https://github.com/kalmarv/primase.git", rev = "3b7fe1c444b320da09976019027c535bc379a1ba" }
+primase-reskate = { git = "https://github.com/kalmarv/primase.git", rev = "3b7fe1c444b320da09976019027c535bc379a1ba" }
+primase-meshops = { git = "https://github.com/kalmarv/primase.git", rev = "3b7fe1c444b320da09976019027c535bc379a1ba" }
+primase-image = { git = "https://github.com/kalmarv/primase.git", rev = "3b7fe1c444b320da09976019027c535bc379a1ba" }
+primase-gltf = { git = "https://github.com/kalmarv/primase.git", rev = "3b7fe1c444b320da09976019027c535bc379a1ba" }
 primase-foundations = { git = "https://github.com/Kalmarv/primase-foundations", rev = "d64ea516ec76c43ddb76ea4556eada37502fc3d4", features = ["compress"] }
 serde_json = "1"
 
