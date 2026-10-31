@@ -31,6 +31,12 @@ a library to read, pass, write".
   under the gantries (mean luma +30 to +80 over tm2); run tm4 at 7,700: +0 to +23, no clipping, pools under the
   gantries, the sun's shadows kept (cache/trackmania/runs/tm4/pairs.jpg: tm2 left, tm4 right). Both 12 of 12 shots,
   0 crash dumps, every travel point read where map.json puts it.
+- Collision under the skater's physics (run drop1, tools/ingame_drop.sh, build4): dropped from 20 m above each map's 3
+  travel points, the skater is at rest after 15 s on 9 of 9 drops, none through: 3 on the road (+0.59 to +0.61 m, the
+  standing height the spawns read too), 6 on the roof of the checkpoint/finish arch above the point (+6.9 to +8.1 m;
+  where_3, where_12 show the skater standing on its flags). 12 of 12 shots, 0 crash dumps. Moving the skater by
+  keyboard is not established: W held through kit/gs-drive (run move3; kit 39b8ced fixed gs_drive, whose 800 ms settle
+  `um win drive` rejected) leaves the skater where it stood on 3 of 3 maps.
 - Packages 0.2.0 (not published): cache/trackmania/releases/0.2.0/TrackMania_{A01Race,Turbulence,IronMaiden}-0.2.0.zip
   (35.6, 40.8, 48.0 MB), payload byte-identical to the build4 stages tm4 ran; changelog and page name the lights.
 
@@ -47,4 +53,5 @@ surfaces as 0.5 cutouts; materialless primitives (grass fins, glows, fake shadow
 - Push gbx-formats b1c154c; primase-foundations zlib-stream d64ea51; primase-testdata eb199df; primase branch
   trackmania (3b7fe1c44); the lab branch (2b19648). Then the program pins one public rev and .cargo/config.toml goes.
 - Create github.com/Kalmarv/trackmania-skate (manifest website_url) and push this repo.
-- Publishing the three packages on Thunderstore; playing the maps by hand (rolling, grinding, fast travel untested).
+- Publishing the three packages on Thunderstore; playing the maps by hand (rolling and grinding on the blocks: synthetic
+  keys do not move the skater, so only a player can check them).
