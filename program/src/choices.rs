@@ -32,10 +32,13 @@ pub const GROUND_ABOVE: f64 = 1.0;
 pub const GROUND_FROM: GroundFrom = GroundFrom::All;
 
 /// The blocks' lights (the start, finish and checkpoint gantries' spots, the stadium floodlights): one unit of the
-/// game's light intensity is the noon sun's 100,000 lux. The game lights a surface by its lights and its sun on one
-/// scale (unit intensity at a light's base, the sun's colour times its angle), and its moods store no sun intensity
-/// to scale by, so a unit is taken as the sun's: a spot of 0.6 is 7.6 million candela.
-pub const LIGHT_LUX_PER_UNIT: f32 = 100_000.0;
+/// game's light intensity is skate.'s noon sun. The game lights a surface by its lights and its sun on one scale (unit
+/// intensity at a light's base, the sun's colour times its angle) and its moods store no sun intensity, so a unit is
+/// the sun the map is lit by, which keeps the lights' share of the light the game's. skate.'s Noon exposes at EV 7.0
+/// to 11.3 (its VisualEnvironment's clamp), 3.7 stops under a physical sunlit noon (EV 15): its sun is taken as
+/// 100,000 lux / 2^3.7, 7,700. At 100,000 (a physical sun) the gantries' spots put 0.15 to 0.49 suns on the road
+/// beneath, which in game (run tm3) washed it and the skater white and erased the sun's shadows.
+pub const LIGHT_LUX_PER_UNIT: f32 = 7_700.0;
 
 /// raise-skate's light calibration: the lights are physical candela by [`LIGHT_LUX_PER_UNIT`], as GTA's are.
 pub const LIGHTS: LightCalibration = LightCalibration::Standard;
