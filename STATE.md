@@ -63,8 +63,9 @@ Noon, resident, no LODs, no GI; lights at 7,700 lux per unit (skate.'s sun), sta
 collision; start = spawn, checkpoints and finish = travel points (at most 24); textures capped at 1024; blended
 surfaces as 0.5 cutouts; materialless primitives (grass fins, glows, fake shadows) left out.
 
-## Remaining
-- Thunderstore: the three 0.2.0 packages (cache/trackmania/releases/0.2.0) wait for Caleb (he said repo only).
-- Grinding is by hand (no grind curves, as Los Santos: skate grinds the collision's own edges).
+## Remaining (Caleb, 2026-10-31)
+- Thunderstore: "Keep repo only": the 0.2.1 zips stay in cache/trackmania/releases/0.2.1 for Caleb to upload.
+- Grinding: Caleb tests by hand (no grind curves, as Los Santos: skate. grinds the collision's own edges).
+- Overhead pictures: the pause map's own image (ui/map_image.png) is accepted for media/.
 - Local patch configs are moved aside as .cargo/config.toml.local-off (here, the lab worktree, .worktrees/trackmania,
   crates/gbx-formats and its gbx-reader worktree); land.sh refuses a landing while one is in effect.
