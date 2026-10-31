@@ -52,12 +52,21 @@ Noon, resident, no LODs, no GI; lights at 7,700 lux per unit (skate.'s sun), sta
 collision; start = spawn, checkpoints and finish = travel points (at most 24); textures capped at 1024; blended
 surfaces as 0.5 cutouts; materialless primitives (grass fins, glows, fake shadows) left out.
 
-## Waiting
-- Landing (Caleb approved pushing, through the primase lead): primase branch trackmania rebased onto origin/main
-  0296a0a27 (head 643fdce4d; fmt, clippy, tests with GAME_DATA all pass), sent to primase-landing with its three dep
-  pins, each a fast-forward of its origin/main: gbx-formats b1c154c, primase-foundations d64ea51, primase-testdata
-  eb199df. Then: rebase the lab branch (2 commits) onto master and repin it, repin program/Cargo.toml to the landed
-  rev, drop .cargo/config.toml, rebuild and push here.
-- This repo is public at github.com/Kalmarv/trackmania-skate (Caleb: repo yes, Thunderstore not yet). Until the
-  landing, its primase pin (3b7fe1c44) is not on GitHub, so it builds only with the local patch.
-- Thunderstore: the three 0.2.0 packages, when Caleb says. Grinding on the blocks by hand.
+## Waiting (resume point)
+- Landing in progress (Caleb approved pushing through the primase lead): gbx-formats b1c154c, primase-foundations
+  d64ea51 and primase-testdata eb199df are on their GitHub mains. The lead (primase-landing) is landing primase branch
+  trackmania (worktree .worktrees/trackmania, head 643fdce4d rebased on main 0296a0a27; fmt, clippy -D warnings, tests
+  with GAME_DATA all pass) with land.sh, job 07605d65; land.sh rebases, so the landed sha may differ from 643fdce4d. The
+  lead sends the landed rev; `git ls-remote https://github.com/Kalmarv/primase refs/heads/main` shows it too.
+- Then:
+  1. Lab (worktree .worktrees/lab-trackmania, branch trackmania, rebased onto origin/master 3de4ddd: e9dcec0, 9cf598f,
+     backup branch backup/lab-trackmania-pre-rebase): set all 21 `Kalmarv/primase", rev =` lines to the landed rev, move
+     .cargo/config.toml aside, `cargo build --release` (regenerates Cargo.lock from GitHub), rerun
+     scratch/trackmania/lab/run_final4.sh (final3's cameras, radians to degrees) and compare with final4 (all three ok,
+     0 sentinels, nothing unsupported, lights 156/417/92, left_out 0/57/0), commit "pin primase at <rev>", push the
+     branch to origin and ask the lead to land it on master.
+  2. Program: program/Cargo.toml primase rev -> landed rev, drop .cargo/config.toml, cargo build --release, rebuild
+     one map to confirm, update this file, push to github.com/Kalmarv/trackmania-skate (public, created; main 45c8530+).
+  3. Clean-clone check: clone trackmania-skate to scratch and `cargo build --release` with no local patch.
+- Thunderstore: the three 0.2.0 packages wait for Caleb (he said repo only). Grinding is by hand (no grind curves, as
+  Los Santos: skate grinds the collision's own edges).
