@@ -7,9 +7,10 @@ a library to read, pass, write".
 
 ## What works (verified)
 - Reader: gbx-formats (crates/gbx-formats, branch gbx-reader worktree) reads Gbx maps and the NadeoPak packs;
-  primase-trackmania (primase worktree .worktrees/trackmania, branch trackmania, local commits 06651deff..309bbfe3e on
+  b1c154c adds collector descs and pack-file heads (every pack: 2360 heads, 313 descs, 312 bodies name the same ident).
+  primase-trackmania (primase worktree .worktrees/trackmania, branch trackmania, local commits 06651deff..3e37e6c73 on
   main 1f0952904) places every block from the Stadium pack.
-- Lab (primase-lab worktree .worktrees/lab-trackmania, source kind `trackmania`, built on the trackmania branch):
+- Lab (primase-lab worktree .worktrees/lab-trackmania, source kind `trackmania`, local commit ad9c601, primase pinned at 3e37e6c73):
   `check --views shaded,notices,collision` on A01-Race, Turbulence (TMX 1354053) and Iron Maiden (TMX 136547): ok,
   0 magenta/lime/cyan pixels, every draw faithful (3227, 2779, 3556). Reports and PNGs in
   scratch/trackmania/lab/final/<map>. Unread: CPlugTreeLight visuals (92-258 per map), 4-6 non-DDS/cube images.
