@@ -1,45 +1,81 @@
 # TrackMania for skate.
 
-TrackMania Nations Forever maps as skateable maps for skate., through ReSkate, rebuilt block by block from the game's
-own models, materials and collision with [primase](https://github.com/kalmarv/primase). An unofficial fan port:
-TrackMania Nations Forever is by Nadeo and Ubisoft; each map is its author's.
+A converter that turns TrackMania Nations Forever maps into custom maps for skate. The output is a ReSkate map, which ReSkate Studio compiles into a mod for the ReSkate mod loader.
 
-![The maps in skate.](media/levels.jpg)
+![The three maps in skate.](media/levels.jpg)
 
-Three maps, each its own package (`TrackMania_<Title>`):
+## Features
 
-| Map | Author | From |
-| --- | --- | --- |
-| A01-Race | Nadeo | the Nations campaign that ships with the game |
-| Turbulence | matto | [TrackMania Exchange 1354053](https://tmnf.exchange/trackshow/1354053) |
-| Iron Maiden | torress | [TrackMania Exchange 136547](https://tmnf.exchange/trackshow/136547) |
+- Converts three maps: A01-Race from the Nations campaign, and Turbulence and Iron Maiden from TrackMania Exchange
+- Rebuilds each map block by block from the models, materials and collision in your own game install
+- Uses primase and its TrackMania reader to read, convert and write the map
+- Keeps the game's collision for every block and leaves out scenery that has none
+- Turns the start into the spawn and each checkpoint and the finish into a fast-travel point
+- Names those points Start, Checkpoint 1, 2, ... and Finish, and drops them onto the ground below
+- Places the blocks' own lights, such as the gantry spots and the stadium floodlights
+- Compiles each map with ReSkate Studio at noon, fully resident, without LODs or baked GI
+- Renders the pause-menu map picture from the map's geometry
+- Packages each map as a ReSkate mod zip with a manifest, icon, page, changelog and trainer spots
+- Converts maps in parallel, one process per map, and reports a failed map without stopping the others
+- Leaves out grass blade fins, additive glows and fake shadows, which have no material skate. can draw
+- Prints the converter's notices and counts for anything left out or approximated
 
-## How it's made
+## Getting Started
 
-`program/src/recipe.rs` is the whole conversion of a map: primase reads the map and every block it places from the
-game's packs (`primase-trackmania`, on [gbx-formats](https://github.com/kalmarv/gbx-formats)), lowers it to plain
-geometry, materials and collision, prepares it for skate. and writes a ReSkate map, which ReSkate Studio compiles into
-a mod. What the port chooses (lights, cutoffs, texture sizes, markers) is in `program/src/choices.rs`; the maps it
-builds are in `program/src/maps.rs`.
+### Requirements
 
+- Windows, for the ReSkate Studio compile
+- Rust 1.99.0 (pinned in `rust-toolchain.toml`)
+- Your own install of TrackMania Nations Forever (free on Steam)
+- skate. and ReSkate Studio (`reskate_cli.exe`)
+
+Nothing from the game or from TrackMania Exchange is in this repository. Download the two exchange maps from
+`https://tmnf.exchange/trackgbx/<id>` and save them as `maps/<id>.Gbx`:
+
+| Map | Id | Author | Source |
+| --- | --- | --- | --- |
+| A01-Race | `a01` | Nadeo | The Nations campaign in the game install |
+| Turbulence | `turbulence` | matto | [TrackMania Exchange 1354053](https://tmnf.exchange/trackshow/1354053) |
+| Iron Maiden | `iron-maiden` | torress | [TrackMania Exchange 136547](https://tmnf.exchange/trackshow/136547) |
+
+### Installation
+
+The workspace has two binaries. Neither is published; run them from a clone with `cargo run`.
+
+| Package | Description |
+| --- | --- |
+| `trackmania-export` (`program/`) | Converts the maps and compiles them with ReSkate Studio |
+| `trackmania-tools` (`tools/trackmania-tools/`) | Packages compiled maps as mod zips and prints the console commands for in-game checks |
+
+```sh
+git clone https://github.com/Kalmarv/trackmania-skate.git
+cd trackmania-skate
 ```
-cargo run --release -p trackmania-export -- --out build --studio <ReSkate Studio reskate_cli.exe> [a01 turbulence iron-maiden]
-cargo run --release -p trackmania-tools -- package --out build --dest releases --version <version> [--icons <folder>]
-kit/run game --job -- env BUILD=<build> "$BASH" tools/ingame_levels.sh <tag>     # every map in one skate. launch
+
+### Usage
+
+Convert and compile every map into `build/`, then package them as version 0.2.1 into `releases/`:
+
+```sh
+cargo run --release -p trackmania-export -- --out build --studio <path to reskate_cli.exe> --game <skate. install>
+cargo run --release -p trackmania-tools -- package --out build --dest releases --version 0.2.1
 ```
 
-It needs your own copy of TrackMania Nations Forever (free on Steam; `--install` if it is not in Steam's default
-folder) and of skate. The exchange maps are read from `maps/<id>.Gbx` (`--exchange` for another folder): download
-each from `https://tmnf.exchange/trackgbx/<id>`. Nothing from the game or the exchange is in this repository.
+This writes `build/<map>/map/TrackMania_<Title>` (the ReSkate map), `build/<map>/stage/Patch` (the Studio compile),
+`build/<map>/mod/TrackMania_<Title>` (the mod folder) and `releases/TrackMania_<Title>-0.2.1.zip`. Install a zip by
+dragging it onto the ReSkate launcher and pick `TrackMania | <Title>` from the level list.
 
-- `program/`: the conversion. `tools/trackmania-tools/`: packaging and the in-game check's commands.
-- `tools/ingame_levels.sh`: loads every built map in skate. and shoots its spawn and three travel points.
-- `tools/ingame_drop.sh`: drops the skater onto each map's travel points (the collision under skate.'s physics).
-- `media/`: the pictures the packages' pages show (shots in skate., and each map's pause map picture).
+Other options and commands:
 
-## In the maps
+- Name map ids (`a01 turbulence iron-maiden`) after the options to convert only those maps.
+- `--install <folder>` reads the game from a folder other than Steam's default, and `--exchange <folder>` reads the exchange maps from a folder other than `maps/`.
+- `--game` can be replaced by the `RESKATE_GAME` environment variable. Without `--studio`, only the ReSkate map folders are written.
+- `--jobs N` sets how many maps convert at once (default 3); each map's output goes to `build/<map>/build.log`.
+- `package --icons <folder>` uses `<folder>/<map id>.png`, a screenshot, as each mod's 256 x 256 icon.
+- `trackmania-tools views skate-commands <map> --out build` prints the skate. console commands that load the map and visit its spawn and travel points.
 
-- Every block with the game's own collision; the start is the spawn, every checkpoint and the finish a fast-travel
-  point (snapped to the ground below it), named Start, Checkpoint 1, 2, ... and Finish.
-- Lit by skate.'s sun and sky (noon). Grass blade fins, additive glows and the fake shadows under objects have no
-  material skate. draws and are left out; water is a still, solid surface; screens draw lit.
+`tools/ingame_levels.sh` and `tools/ingame_drop.sh` run those views and a collision drop test in skate. They use
+hard-coded paths and the shared runner from a separate reskate-tools checkout, so they only run on the maintainer's machine.
+
+Run the unit tests with `cargo test`. The repository has no license file. TrackMania Nations Forever is by Nadeo and
+Ubisoft, and each map belongs to its author.
