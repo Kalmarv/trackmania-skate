@@ -1,6 +1,6 @@
 # TrackMania for skate.
 
-[![CI](https://img.shields.io/github/actions/workflow/status/Kalmarv/trackmania-skate/ci.yml?branch=main&label=CI)](https://github.com/Kalmarv/trackmania-skate/actions/workflows/ci.yml) [![release](https://img.shields.io/github/v/release/Kalmarv/trackmania-skate)](https://github.com/Kalmarv/trackmania-skate/releases/latest)
+[![CI](https://img.shields.io/github/actions/workflow/status/Kalmarv/trackmania-skate/ci.yml?branch=main&label=CI)](https://github.com/Kalmarv/trackmania-skate/actions/workflows/ci.yml)
 
 A converter that turns TrackMania Nations Forever maps into custom maps for skate. The output is a ReSkate map, which ReSkate Studio compiles into a mod for the ReSkate mod loader.
 
@@ -42,7 +42,7 @@ Nothing from the game or from TrackMania Exchange is in this repository. Downloa
 
 ### Installation
 
-The workspace has two binaries. Download both for Windows or Linux (x86_64) from the [latest release](https://github.com/Kalmarv/trackmania-skate/releases/latest), or run them from a clone with `cargo run`.
+The workspace has two binaries. No binary release has been made yet, so run them from a clone with `cargo run`; once a release is made, both are attached to it for Windows and Linux (x86_64) on the [releases page](https://github.com/Kalmarv/trackmania-skate/releases).
 
 | Package | Description |
 | --- | --- |
@@ -76,8 +76,8 @@ Other options and commands:
 - `package --icons <folder>` uses `<folder>/<map id>.png`, a screenshot, as each mod's 256 x 256 icon.
 - `trackmania-tools views skate-commands <map> --out build` prints the skate. console commands that load the map and visit its spawn and travel points.
 
-`tools/ingame_levels.sh` and `tools/ingame_drop.sh` run those views and a collision drop test in skate. They use
-hard-coded paths and the shared runner from a separate reskate-tools checkout, so they only run on the maintainer's machine.
+`tools/ingame_levels.sh` and `tools/ingame_drop.sh` run those views and a collision drop test in skate. They need the shared
+runner from a reskate-tools checkout (`RESKATE_TOOLS`) and read `BUILD` and `RUNS` for the build and output folders.
 
 Run the unit tests with `cargo test`. The repository has no license file. TrackMania Nations Forever is by Nadeo and
 Ubisoft, and each map belongs to its author. [CONTRIBUTING.md](CONTRIBUTING.md) describes how releases are made.
