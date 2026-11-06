@@ -55,6 +55,13 @@ a library to read, pass, write".
   pause map's own picture. 0.2.0 (cache/trackmania/releases/0.2.0) is superseded.
 
 ## Open
+- The workspace pins primase once, on main 364a33cb (2026-11-06; gbx-formats b0cfa11 through it), and
+  primase-foundations 0.3.3 from crates.io: one copy of each in Cargo.lock. It builds, clippy and rustdoc are clean and
+  the unit tests pass, but no map has been converted on it: everything verified above is d827770db's. Since then
+  primase's pass manager checks the stated pipeline against the writer's target (a name the ReSkate writer refuses
+  is Error::Illegal, no longer carried) and texcodec has its own BC7 encoder, so build6's folders are not expected to
+  be byte-identical. A real-data run redoes `trackmania-export --jobs 3 --studio ...` on the 3 maps: each `ok`, the
+  notices and counts against build6's, the Studio compile, and the maps loaded in skate. (spawns, 0 crash dumps).
 - The sun from the mood (direction from latitude, rise/fall and day time) needs the game's model: RE of TmForever.exe
   or in-game measurement. Not needed for skate (the program chooses skate's noon sun).
 

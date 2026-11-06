@@ -23,7 +23,7 @@ const USAGE: &str = "usage: trackmania-tools package --out <build folder> --dest
 fn main() -> Result<()> {
     let mut args = std::env::args().skip(1);
     match args.next().as_deref() {
-        Some("package") => package(args.collect()),
+        Some("package") => package_command(args.collect()),
         Some("views") => views_command(args.collect()),
         _ => Err(USAGE.into()),
     }
@@ -31,7 +31,7 @@ fn main() -> Result<()> {
 
 /// Each built map as an installable mod folder (`<out>/<map>/mod/TrackMania_<Title>`) and its zip in `--dest`
 /// ([`package`]).
-fn package(args: Vec<String>) -> Result<()> {
+fn package_command(args: Vec<String>) -> Result<()> {
     let (mut out, mut dest, mut version, mut icons, mut wanted) = (None, None, None, None, Vec::new());
     let mut args = args.into_iter();
     while let Some(arg) = args.next() {
