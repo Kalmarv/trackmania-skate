@@ -5,15 +5,18 @@
 # skate-commands` puts on the road) and read and shot after 15 s. The GTA engine's drop test (reskate-tools
 # REPORT_ENGINE.md: a 27 m drop ends in a bail at rest on the surface): a reading within a metre or so of the point's
 # height is the skater stopped by the map's own collision; falling through reads far below it.
-#   kit/run game --job -- "$BASH" tools/ingame_drop.sh TAG [MAP ...]     (default: every map)
-# BUILD: the program's --out folder (default <modding>/cache/trackmania/build). Output: cache/trackmania/runs/TAG, with
+#   tools/ingame_drop.sh TAG [MAP ...]     (default: every map)
+# RESKATE_TOOLS: a reskate-tools checkout (default $MODDING_ROOT/reskate/reskate-tools). BUILD: the program's --out
+# folder (default $MODDING_CACHE/trackmania/build). RUNS: where runs go (default $MODDING_CACHE/trackmania/runs).
+# Output: $RUNS/TAG, with
 # drops.tsv (map, point, target height, read position).
 set -u
 TAG=$1; shift
-E=/c/Users/kalmarv/modding/reskate/reskate-tools/ports/gta/engine
-B=${BUILD:-/c/Users/kalmarv/modding/cache/trackmania/build}
-R=/c/Users/kalmarv/modding/cache/trackmania/runs/$TAG
-X=${TRACKMANIA_TOOLS:-/c/Users/kalmarv/modding/games/trackmania/target/release/trackmania-tools.exe}
+W=$(cd "$(dirname "$0")/.." && pwd)
+E=${RESKATE_TOOLS:-${MODDING_ROOT:?set RESKATE_TOOLS (or MODDING_ROOT)}/reskate/reskate-tools}/ports/gta/engine
+B=${BUILD:-${MODDING_CACHE:?set BUILD (or MODDING_CACHE)}/trackmania/build}
+R=${RUNS:-${MODDING_CACHE:?set RUNS (or MODDING_CACHE)}/trackmania/runs}/$TAG
+X=${TRACKMANIA_TOOLS:-$W/target/release/trackmania-tools.exe}
 DROP=${DROP:-20}; DROPS=${DROPS:-4}
 MAPS=("$@"); [ ${#MAPS[@]} -gt 0 ] || MAPS=(a01 turbulence iron-maiden)
 SRCS=; NAMES=; CMDS="wait 100"; SECS=100; SHOTS=0

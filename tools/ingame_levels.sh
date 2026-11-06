@@ -2,15 +2,18 @@
 # Every map in one skate. launch, through the shared runner (reskate-tools ingame.sh in copy mode with several mods:
 # each map's mod copied in, every other mod disabled, all restored after; crash reporting off). Each map is loaded in
 # turn, shot at the spawn and at up to three of its travel points (from its map.json; every `trainer where` is a shot).
-#   kit/run game --job -- "$BASH" tools/ingame_levels.sh TAG [MAP ...]     (default: every map)
-# BUILD: the program's --out folder (default <modding>/cache/trackmania/build). Output: cache/trackmania/runs/TAG.
+#   tools/ingame_levels.sh TAG [MAP ...]     (default: every map)
+# RESKATE_TOOLS: a reskate-tools checkout (default $MODDING_ROOT/reskate/reskate-tools). BUILD: the program's --out
+# folder (default $MODDING_CACHE/trackmania/build). RUNS: where runs go (default $MODDING_CACHE/trackmania/runs).
+# Output: $RUNS/TAG.
 set -u
 TAG=$1; shift
-E=/c/Users/kalmarv/modding/reskate/reskate-tools/ports/gta/engine
-B=${BUILD:-/c/Users/kalmarv/modding/cache/trackmania/build}
-R=/c/Users/kalmarv/modding/cache/trackmania/runs/$TAG
+W=$(cd "$(dirname "$0")/.." && pwd)
+E=${RESKATE_TOOLS:-${MODDING_ROOT:?set RESKATE_TOOLS (or MODDING_ROOT)}/reskate/reskate-tools}/ports/gta/engine
+B=${BUILD:-${MODDING_CACHE:?set BUILD (or MODDING_CACHE)}/trackmania/build}
+R=${RUNS:-${MODDING_CACHE:?set RUNS (or MODDING_CACHE)}/trackmania/runs}/$TAG
 # the tooling (cargo build --release -p trackmania-tools in the repo); TRACKMANIA_TOOLS to use another build
-X=${TRACKMANIA_TOOLS:-/c/Users/kalmarv/modding/games/trackmania/target/release/trackmania-tools.exe}
+X=${TRACKMANIA_TOOLS:-$W/target/release/trackmania-tools.exe}
 MAPS=("$@"); [ ${#MAPS[@]} -gt 0 ] || MAPS=(a01 turbulence iron-maiden)
 SRCS=; NAMES=; CMDS="wait 100"; SECS=100; SHOTS=0
 for L in "${MAPS[@]}"; do
