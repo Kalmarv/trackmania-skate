@@ -79,5 +79,5 @@ Other options and commands:
 `tools/ingame_levels.sh` and `tools/ingame_drop.sh` run those views and a collision drop test in skate. They need the shared
 runner from a reskate-tools checkout (`RESKATE_TOOLS`) and read `BUILD` and `RUNS` for the build and output folders.
 
-Run the unit tests with `cargo test`. The repository has no license file. TrackMania Nations Forever is by Nadeo and
+Run the unit tests with `cargo test`. The code is licensed under the GPL, version 3 or later ([LICENSE](LICENSE)). TrackMania Nations Forever is by Nadeo and
 Ubisoft, and each map belongs to its author. [CONTRIBUTING.md](CONTRIBUTING.md) describes how releases are made.

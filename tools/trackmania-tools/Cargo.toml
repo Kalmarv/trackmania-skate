@@ -1,6 +1,7 @@
 [package]
 name = "trackmania-tools"
 version.workspace = true
+license.workspace = true
 repository = "https://github.com/Kalmarv/trackmania-skate"
 edition = "2024"
 rust-version = "1.99"

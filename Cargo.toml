@@ -7,6 +7,7 @@ resolver = "3"
 [workspace.package]
 # one version for the repository: a release is its tag v<version> (CONTRIBUTING.md, Releasing)
 version = "0.1.0"
+license = "GPL-3.0-or-later"
 
 # primase is a library this workspace uses, pinned once by git revision on primase main (no path checkout, no fork):
 # 364a33cb, primase main. primase-foundations is the crates.io version primase main uses, so the lockfile holds one.
