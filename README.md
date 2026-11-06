@@ -42,7 +42,7 @@ Nothing from the game or from TrackMania Exchange is in this repository. Downloa
 
 ### Installation
 
-The workspace has two binaries. Each [release](https://github.com/Kalmarv/trackmania-skate/releases/latest) has both for Windows and Linux (x86_64), with `SHA256SUMS`; or run them from a clone with `cargo run`.
+The workspace has two binaries. Download both for Windows or Linux (x86_64) from the [latest release](https://github.com/Kalmarv/trackmania-skate/releases/latest), or run them from a clone with `cargo run`.
 
 | Package | Description |
 | --- | --- |
@@ -80,15 +80,4 @@ Other options and commands:
 hard-coded paths and the shared runner from a separate reskate-tools checkout, so they only run on the maintainer's machine.
 
 Run the unit tests with `cargo test`. The repository has no license file. TrackMania Nations Forever is by Nadeo and
-Ubisoft, and each map belongs to its author.
-
-## Releasing
-
-A release is a commit that changes the version of a package that ships a binary (`trackmania-export`, `trackmania-tools`). Once every CI job has
-passed on main, CI's release job (`.github/release.py`) builds the binaries, tags the commit (`v<version>`, or
-`<package>-v<version>` where several packages ship) and creates the GitHub Release with the commits since the previous release as its notes and
-`<bin>-<version>-<target>.zip` / `.tar.gz` and `SHA256SUMS` attached. A commit that changes no version only runs CI.
-
-1. Bump the package's `version` when a change is worth releasing: a patch (0.x.Y) for fixes, a minor (0.X.0) for
-   new features or changed behaviour. Run `cargo check` so `Cargo.lock` follows.
-2. Push to main. Never tag or create a Release yourself.
+Ubisoft, and each map belongs to its author. [CONTRIBUTING.md](CONTRIBUTING.md) describes how releases are made.
