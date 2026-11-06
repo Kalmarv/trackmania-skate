@@ -42,7 +42,7 @@ Nothing from the game or from TrackMania Exchange is in this repository. Downloa
 
 ### Installation
 
-The workspace has two binaries. No binary release has been made yet, so run them from a clone with `cargo run`; once a release is made, both are attached to it for Windows and Linux (x86_64) on the [releases page](https://github.com/Kalmarv/trackmania-skate/releases).
+The workspace has two binaries. Each [release](https://github.com/Kalmarv/trackmania-skate/releases/latest) has both for Windows and Linux (x86_64), each archive with its `.sha256`; or run them from a clone with `cargo run`.
 
 | Package | Description |
 | --- | --- |
